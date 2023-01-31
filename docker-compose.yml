@@ -1,0 +1,22 @@
+version: "3.8"
+services:
+  mongodb:
+    image: mongo:5.0.2-focal
+    container_name: RTP_API3_mongodb
+    restart: unless-stopped
+    volumes:
+      - data:/data/db
+  server:
+    build: ./server
+    container_name: RTP_API3_server
+    ports:
+      - "5050:5050"
+    volumes:
+      - logs:/app/logs
+      - ./server:/app
+      - /app/node_modules
+    depends_on:
+      - mongodb
+volumes:
+  data:
+  logs:

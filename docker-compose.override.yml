@@ -1,0 +1,36 @@
+# Override containers for local / dev environnement
+version: "3"
+services:
+  server:
+    command: ["yarn", "start"]
+    ports:
+      - "127.0.0.1:9229:9229" # Allows remote debugging
+    volumes:
+      - ./server/src:/app/src # Allows source folders to be watched
+      - ./server/config:/app/config
+      - ./server/.env:/app/.env
+      - RTP_API3_server_data:/data
+    environment:
+      - RTP_API3_ENV=local
+      - RTP_API3_APP_NAME=RTP API3
+      # auth
+      - RTP_API3_AUTH_USER_JWT_SECRET=1234
+      - RTP_API3_AUTH_ACTIVATION_JWT_SECRET=456
+      - RTP_API3_AUTH_PASSWORD_JWT_SECRET=789
+      # users
+      ## admin
+      - RTP_API3_USERS_DEFAULT_ADMIN_NAME=RTP-API3-admin
+      - RTP_API3_USERS_DEFAULT_ADMIN_PASSWORD=password
+      - RTP_API3_USERS_DEFAULT_ADMIN_PERMISSIONS=administrator
+  mongodb:
+    ports:
+      - "127.0.0.1:27017:27017"
+    volumes:
+      - RTP_API3_mongodb_data:/data
+volumes:
+  RTP_API3_mongodb_data:
+    driver: local
+    name: RTP_API3_mongodb_data
+  RTP_API3_server_data:
+    driver: local
+    name: RTP_API3_server_data
